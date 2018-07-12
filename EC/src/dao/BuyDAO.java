@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import base.DBManager;
 import beans.BuyDataBeans;
@@ -101,5 +104,111 @@ public class BuyDAO {
 			}
 		}
 	}
+    /**
+     * 全てのユーザ情報を取得する
+     * @return
+     */
+    public List<BuyDataBeans> findBuyDataAll(int ID) {
+        Connection conn = null;
+        PreparedStatement st = null;
+        List<BuyDataBeans> buyDataBeansList = new ArrayList<BuyDataBeans>();
+
+        try {
+            // データベースへ接続
+            conn = DBManager.getConnection();
+
+
+            // SELECT文を準備
+            // TODO: 未実装：管理者以外を取得するようSQLを変更する
+            st = conn.prepareStatement(
+            		" Select t_buy.id,t_buy.create_date,m_delivery_method.name,t_buy.total_price "
+            		      + " FROM t_buy INNER JOIN m_delivery_method "
+            		      + " ON t_buy.delivery_method_id = m_delivery_method.id "
+            		      + " WHERE t_buy.user_id = ? ");
+
+            		      st.setInt(1, ID);
+             // SELECTを実行し、結果表を取得
+            ResultSet rs = st.executeQuery();
+
+            // 結果表に格納されたレコードの内容を
+            // Userインスタンスに設定し、ArrayListインスタンスに追加
+            while (rs.next()) {
+                int id = rs.getInt("id");
+            	Date date = rs.getTimestamp("create_date");
+                String name = rs.getString("name");
+                int totalPrice = rs.getInt("total_price");
+                BuyDataBeans buyDataBeans = new BuyDataBeans(id, date , name, totalPrice);
+
+                buyDataBeansList.add(buyDataBeans);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // データベース切断
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return buyDataBeansList;
+    }
+
+    public List<BuyDataBeans> findBuyDataAll1(int buy_id) {
+        Connection conn = null;
+        PreparedStatement st = null;
+        List<BuyDataBeans> buyDataBeansList1 = new ArrayList<BuyDataBeans>();
+
+        try {
+            // データベースへ接続
+            conn = DBManager.getConnection();
+
+
+            // SELECT文を準備
+            // TODO: 未実装：管理者以外を取得するようSQLを変更する
+            st = conn.prepareStatement(
+            		" Select t_buy.id,t_buy.create_date,m_delivery_method.name,t_buy.total_price,m_delivery_method.price "
+            		      + " FROM t_buy INNER JOIN m_delivery_method "
+            		      + " ON t_buy.delivery_method_id = m_delivery_method.id "
+            		      + " WHERE t_buy.id = ? ");
+
+            		      st.setInt(1, buy_id);
+             // SELECTを実行し、結果表を取得
+            ResultSet rs = st.executeQuery();
+
+            // 結果表に格納されたレコードの内容を
+            // Userインスタンスに設定し、ArrayListインスタンスに追加
+            while (rs.next()) {
+                int id = rs.getInt("id");
+            	Date date = rs.getTimestamp("create_date");
+                String name = rs.getString("name");
+                int totalPrice = rs.getInt("total_price");
+                int deliveryMethodPrice = rs.getInt("price");
+                BuyDataBeans buyDataBeans1 = new BuyDataBeans(id, date , name, totalPrice , deliveryMethodPrice);
+
+                buyDataBeansList1.add(buyDataBeans1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            // データベース切断
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return buyDataBeansList1;
+    }
+
+
 
 }

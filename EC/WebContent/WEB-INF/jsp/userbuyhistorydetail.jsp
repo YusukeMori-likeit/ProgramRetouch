@@ -1,4 +1,5 @@
 <%@	page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,10 @@
 			<div class="col s10 offset-s1">
 				<div class="card grey lighten-5">
 					<div class="card-content">
+							<c:if test="${validationMessage != null}">
+								<p class="red-text center-align">${validationMessage}</p>
+							</c:if>
+							<br> <br>
 						<table>
 							<thead>
 								<tr>
@@ -28,11 +33,13 @@
 								</tr>
 							</thead>
 							<tbody>
+							<c:forEach var="buyDataBeansList1" items="${buyDataBeansList1}">
 								<tr>
-									<td class="center">1234年56月78日90時12分</td>
-									<td class="center">サンプル</td>
-									<td class="center">123456789円</td>
+									<td class="center">${buyDataBeansList1.formatDate}</td>
+									<td class="center">${buyDataBeansList1.deliveryMethodName}</td>
+									<td class="center">${buyDataBeansList1.totalPrice}円</td>
 								</tr>
+								</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -52,22 +59,19 @@
 								</tr>
 							</thead>
 							<tbody>
+							<c:forEach var="ItemDataBeans" items="${buyDetailItemList}">
 								<tr>
-									<td class="center">サンプル商品名1</td>
-									<td class="center">111111111円</td>
+									<td class="center">${ItemDataBeans.name}</td>
+									<td class="center">${ItemDataBeans.price}円</td>
 								</tr>
+								</c:forEach>
+									<c:forEach var="buyDataBeansList1" items="${buyDataBeansList1}">
 								<tr>
-									<td class="center">サンプル商品名2</td>
-									<td class="center">222222222円</td>
+									<td class="center">${buyDataBeansList1.deliveryMethodName}</td>
+									<td class="center">${buyDataBeansList1.deliveryMethodPrice}円</td>
 								</tr>
-								<tr>
-									<td class="center">サンプル商品名3</td>
-									<td class="center">333333333円</td>
-								</tr>
-								<tr>
-									<td class="center">サンプル</td>
-									<td class="center">123456789円</td>
-								</tr>
+								</c:forEach>
+
 							</tbody>
 						</table>
 					</div>
